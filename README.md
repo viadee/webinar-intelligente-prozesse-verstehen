@@ -3,6 +3,6 @@ Wie integriere ich KI in Geschäftsprozesse und was steckt dahinter? Material zu
 
 ![WebinarMaterial](https://github.com/viadee/webinar-intelligente-prozesse-verstehen/blob/master/WebinarIntelligenteProzesse.png)
 
-https://github.com/viadee/webinar-intelligente-prozesse-verstehen/blob/master/WebinarIntelligenteProzesse.png
+Hier finden Sie das <a href="https://github.com/viadee/webinar-intelligente-prozesse-verstehen/blob/master/Webinar%20Intelligente%20Prozesse%20-%20viadee%202020.pdf">PDF zur Präsentation</a>
 
-  <a href="https://github.com/viadee/webinar-intelligente-prozesse-verstehen/blob/master/Webinar%20Intelligente%20Prozesse%20-%20viadee%202020.pdf">PDF zur Präsentation</a>
+Quellcode zu Beispielen folgt noch.
