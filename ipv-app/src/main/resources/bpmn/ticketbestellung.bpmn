@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1w8zhn9" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.3.4">
+  <bpmn:collaboration id="TicketBestellungProcess">
+    <bpmn:participant id="poolTicketbearbeitung" name="Pool Ticketbearbeitung" processRef="ticketbestellung" />
+  </bpmn:collaboration>
+  <bpmn:process id="ticketbestellung" name="Titanic Ticketbestellung" isExecutable="true">
+    <bpmn:exclusiveGateway id="ExclusiveGateway_158k1hj" name="externe Prüfung notwendig?" default="SequenceFlow_0c82ho8">
+      <bpmn:incoming>SequenceFlow_1a2rqox</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_07gejqz</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0c82ho8</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0yksehm</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_09oodfe" name="Ticketbestellung ablehnen?">
+      <bpmn:incoming>SequenceFlow_0b9bkwr</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_121gw32</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0yafy3c</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="EndEvent_00741th" name="Ticket ausgeliefert">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">sleep(2000)</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0jja460</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="EndEvent_098wupx" name="Ticketbestellung abgelehnt">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">sleep(2000)</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1qtws1k</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="serviceTaskKaeuferinformationenVerarbeiten" name="Käufer-informationen verarbeiten" camunda:asyncBefore="true" camunda:class="de.viadee.ki.ipv.task.KaeuferInformationenVerarbeitenDelegate">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">sleep(2000)</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0anqmya</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0cwyrhs</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="ServiceTask_150rcq4" name="Ticket ausliefern" camunda:class="de.viadee.ki.ipv.task.TicketAusliefernDelegate">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">sleep(2000)</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0sigvxa</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0jja460</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="ServiceTask_0og2sis" name="Ticketbestellung ablehnen" camunda:class="de.viadee.ki.ipv.task.TicketAblehnenDelegate">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">sleep(2000)</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_05tolcj</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1qtws1k</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0ie0zak">
+      <bpmn:incoming>SequenceFlow_0c82ho8</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_121gw32</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1slas9p</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_05tolcj</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1rgoglh">
+      <bpmn:incoming>SequenceFlow_0yksehm</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0yafy3c</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_051hqym</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0sigvxa</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="userTaskTicketPruefen" name="Ticket prüfen" camunda:asyncAfter="true">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="form_int_person_name" label="Name" type="string" defaultValue="${int_person_name}" />
+          <camunda:formField id="form_int_person_id" label="ID" type="long" defaultValue="${int_person_id}" />
+          <camunda:formField id="form_pv_ki_konfidenz" label="Konfidenzwert" type="string" defaultValue="${pv_ki_konfidenz}" />
+          <camunda:formField id="form_pv_anomalie_wert" label="Anomaliewert" type="string" defaultValue="${pv_anomalie_wert}" />
+          <camunda:formField id="pv_interne_entscheidung" label="Ihre Entscheidung?" type="string" defaultValue="${pv_interne_entscheidung}" />
+          <camunda:formField id="form_pv_handlungsempfehlung" label="Handlungsempfehlung" type="string" defaultValue="${pv_handlungsempfehlung}" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0wr7o4e</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1a2rqox</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="serviceTaskExternePruefungDurchfuehren" name="Externe Prüfung durchführen" camunda:class="de.viadee.ki.ipv.task.ExternePruefungDurchfuehrenDelegate">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">sleep(2000)</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_07gejqz</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0b9bkwr</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_04a7k5r" name="Anomalie erkannt?">
+      <bpmn:incoming>SequenceFlow_1tf8xbk</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_05k2ndi</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_13s8heg</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0jdnl9n">
+      <bpmn:incoming>SequenceFlow_05k2ndi</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0xhk49s</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_16rnfcv</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0eot1tp" name="KI ist ausreichend sicher?">
+      <bpmn:incoming>SequenceFlow_1sb32d5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0xhk49s</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0cti5iv</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0h2pvvu" name="durch KI freigeben?">
+      <bpmn:incoming>SequenceFlow_0cti5iv</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_051hqym</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1slas9p</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="serviceTaskAnomalieerkennung" name="Anomalie erkennen" camunda:asyncBefore="true" camunda:class="de.viadee.ki.ipv.task.AnomalieerkennungDelegate">
+      <bpmn:incoming>SequenceFlow_0cwyrhs</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1tf8xbk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="serviceTaskHandlungsempfehlungErstellen" name="KI-Handlungs-empfehlung erstellen" camunda:asyncBefore="true" camunda:class="de.viadee.ki.ipv.task.HandlungsempfehlungErstellenDelegate">
+      <bpmn:incoming>SequenceFlow_16rnfcv</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0wr7o4e</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="StartEvent_1nz35oa" name="Ticketbestellung empfangen">
+      <bpmn:outgoing>SequenceFlow_0anqmya</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0wr7o4e" sourceRef="serviceTaskHandlungsempfehlungErstellen" targetRef="userTaskTicketPruefen" />
+    <bpmn:sequenceFlow id="SequenceFlow_1slas9p" name="Nein, Ticketbestellung ablehnen" sourceRef="ExclusiveGateway_0h2pvvu" targetRef="ExclusiveGateway_0ie0zak">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!pv_ki_entscheidung_verkauf_ok}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_051hqym" name="Ja, Ticket ausstellen" sourceRef="ExclusiveGateway_0h2pvvu" targetRef="ExclusiveGateway_1rgoglh">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pv_ki_entscheidung_verkauf_ok}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0cti5iv" name="Ja, KI ist ausreichend sicher" sourceRef="ExclusiveGateway_0eot1tp" targetRef="ExclusiveGateway_0h2pvvu">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pv_ki_konfidenz&gt;=pv_ki_konfidenzschwellwert}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0xhk49s" name="Nein, KI ist unsicher" sourceRef="ExclusiveGateway_0eot1tp" targetRef="ExclusiveGateway_0jdnl9n">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pv_ki_konfidenz &lt; pv_ki_konfidenzschwellwert}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1sb32d5" sourceRef="serviceTaskTicketkaufDurchKIModellpruefen" targetRef="ExclusiveGateway_0eot1tp" />
+    <bpmn:sequenceFlow id="SequenceFlow_13s8heg" name="Nein, Ticketbestellung automatisiert prüfen" sourceRef="ExclusiveGateway_04a7k5r" targetRef="serviceTaskTicketkaufDurchKIModellpruefen">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pv_anomalie_wert &lt; pv_anomalie_schwellwert}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_16rnfcv" sourceRef="ExclusiveGateway_0jdnl9n" targetRef="serviceTaskHandlungsempfehlungErstellen" />
+    <bpmn:sequenceFlow id="SequenceFlow_05k2ndi" name="Ja, Ticketbestellung ist sonderbar" sourceRef="ExclusiveGateway_04a7k5r" targetRef="ExclusiveGateway_0jdnl9n">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pv_anomalie_wert &gt;= pv_anomalie_schwellwert}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1tf8xbk" sourceRef="serviceTaskAnomalieerkennung" targetRef="ExclusiveGateway_04a7k5r" />
+    <bpmn:sequenceFlow id="SequenceFlow_05tolcj" sourceRef="ExclusiveGateway_0ie0zak" targetRef="ServiceTask_0og2sis" />
+    <bpmn:sequenceFlow id="SequenceFlow_0sigvxa" sourceRef="ExclusiveGateway_1rgoglh" targetRef="ServiceTask_150rcq4" />
+    <bpmn:sequenceFlow id="SequenceFlow_0cwyrhs" sourceRef="serviceTaskKaeuferinformationenVerarbeiten" targetRef="serviceTaskAnomalieerkennung" />
+    <bpmn:sequenceFlow id="SequenceFlow_1qtws1k" sourceRef="ServiceTask_0og2sis" targetRef="EndEvent_098wupx" />
+    <bpmn:sequenceFlow id="SequenceFlow_0jja460" sourceRef="ServiceTask_150rcq4" targetRef="EndEvent_00741th" />
+    <bpmn:sequenceFlow id="SequenceFlow_0yafy3c" name="annehmen" sourceRef="ExclusiveGateway_09oodfe" targetRef="ExclusiveGateway_1rgoglh">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pv_externe_entscheidung == "verkauf_ok"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_121gw32" name="ablehnen" sourceRef="ExclusiveGateway_09oodfe" targetRef="ExclusiveGateway_0ie0zak">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pv_externe_entscheidung != "verkauf_ok"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0b9bkwr" sourceRef="serviceTaskExternePruefungDurchfuehren" targetRef="ExclusiveGateway_09oodfe" />
+    <bpmn:sequenceFlow id="SequenceFlow_0yksehm" name="nein, Ticket ausstellen" sourceRef="ExclusiveGateway_158k1hj" targetRef="ExclusiveGateway_1rgoglh">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pv_interne_entscheidung == "verkauf_ok"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0c82ho8" name="nein, Ticketbestellung ablehnen" sourceRef="ExclusiveGateway_158k1hj" targetRef="ExclusiveGateway_0ie0zak" />
+    <bpmn:sequenceFlow id="SequenceFlow_07gejqz" name="ja, Überleben ist ungewiss" sourceRef="ExclusiveGateway_158k1hj" targetRef="serviceTaskExternePruefungDurchfuehren">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pv_interne_entscheidung == "externe_pruefung"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1a2rqox" sourceRef="userTaskTicketPruefen" targetRef="ExclusiveGateway_158k1hj" />
+    <bpmn:sequenceFlow id="SequenceFlow_0anqmya" sourceRef="StartEvent_1nz35oa" targetRef="serviceTaskKaeuferinformationenVerarbeiten" />
+    <bpmn:businessRuleTask id="serviceTaskTicketkaufDurchKIModellpruefen" name="Ticketkauf regeln" camunda:asyncBefore="true" camunda:class="de.viadee.ki.ipv.task.MLKlassifikationDelegate">
+      <bpmn:incoming>SequenceFlow_13s8heg</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1sb32d5</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TicketBestellungProcess">
+      <bpmndi:BPMNShape id="Participant_0toqpvz_di" bpmnElement="poolTicketbearbeitung" isHorizontal="true">
+        <dc:Bounds x="158" y="40" width="1822" height="530" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_158k1hj_di" bpmnElement="ExclusiveGateway_158k1hj" isMarkerVisible="true" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="1348" y="175" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1334" y="145" width="79" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_09oodfe_di" bpmnElement="ExclusiveGateway_09oodfe" isMarkerVisible="true" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="1637" y="285" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1683" y="296" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_00741th_di" bpmnElement="EndEvent_00741th" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="1897" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1871" y="225" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_098wupx_di" bpmnElement="EndEvent_098wupx" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="1897" y="392" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1876" y="435" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_087mbmu_di" bpmnElement="serviceTaskKaeuferinformationenVerarbeiten" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="288" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_150rcq4_di" bpmnElement="ServiceTask_150rcq4" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="1744" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0og2sis_di" bpmnElement="ServiceTask_0og2sis" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="1744" y="370" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0ie0zak_di" bpmnElement="ExclusiveGateway_0ie0zak" isMarkerVisible="true" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="1637" y="385" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1rgoglh_di" bpmnElement="ExclusiveGateway_1rgoglh" isMarkerVisible="true" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="1637" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_1dctqoy_di" bpmnElement="userTaskTicketPruefen" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="1128" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1iom6uf_di" bpmnElement="serviceTaskExternePruefungDurchfuehren" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="1486" y="270" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_04a7k5r_di" bpmnElement="ExclusiveGateway_04a7k5r" isMarkerVisible="true" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <dc:Bounds x="585" y="175" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="588" y="145" width="46" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0jdnl9n_di" bpmnElement="ExclusiveGateway_0jdnl9n" isMarkerVisible="true" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="885" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0eot1tp_di" bpmnElement="ExclusiveGateway_0eot1tp" isMarkerVisible="true" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <dc:Bounds x="885" y="285" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="867" y="342" width="88" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0h2pvvu_di" bpmnElement="ExclusiveGateway_0h2pvvu" isMarkerVisible="true" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <dc:Bounds x="1255" y="285" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1294" y="326" width="52" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0j21ts3_di" bpmnElement="serviceTaskAnomalieerkennung" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <dc:Bounds x="440" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_027atbu_di" bpmnElement="serviceTaskHandlungsempfehlungErstellen" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <dc:Bounds x="980" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0d6fxfz_di" bpmnElement="StartEvent_1nz35oa" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="212" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="190" y="225" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0wr7o4e_di" bpmnElement="SequenceFlow_0wr7o4e" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="1080" y="200" />
+        <di:waypoint x="1128" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1slas9p_di" bpmnElement="SequenceFlow_1slas9p" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <di:waypoint x="1280" y="335" />
+        <di:waypoint x="1280" y="510" />
+        <di:waypoint x="1662" y="510" />
+        <di:waypoint x="1662" y="435" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1300" y="460" width="80" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_051hqym_di" bpmnElement="SequenceFlow_051hqym" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <di:waypoint x="1280" y="285" />
+        <di:waypoint x="1280" y="100" />
+        <di:waypoint x="1662" y="100" />
+        <di:waypoint x="1662" y="175" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1295" y="66" width="50" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0cti5iv_di" bpmnElement="SequenceFlow_0cti5iv" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <di:waypoint x="935" y="310" />
+        <di:waypoint x="1255" y="310" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1040" y="316" width="60" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0xhk49s_di" bpmnElement="SequenceFlow_0xhk49s" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <di:waypoint x="910" y="285" />
+        <di:waypoint x="910" y="225" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="923" y="242" width="54" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1sb32d5_di" bpmnElement="SequenceFlow_1sb32d5" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <di:waypoint x="820" y="310" />
+        <di:waypoint x="885" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_13s8heg_di" bpmnElement="SequenceFlow_13s8heg" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <di:waypoint x="610" y="225" />
+        <di:waypoint x="610" y="310" />
+        <di:waypoint x="720" y="310" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="550" y="303" width="80" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_16rnfcv_di" bpmnElement="SequenceFlow_16rnfcv" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="935" y="200" />
+        <di:waypoint x="980" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_05k2ndi_di" bpmnElement="SequenceFlow_05k2ndi" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <di:waypoint x="635" y="200" />
+        <di:waypoint x="885" y="200" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="710" y="160" width="80" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1tf8xbk_di" bpmnElement="SequenceFlow_1tf8xbk" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <di:waypoint x="540" y="200" />
+        <di:waypoint x="585" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_05tolcj_di" bpmnElement="SequenceFlow_05tolcj" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="1687" y="410" />
+        <di:waypoint x="1744" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0sigvxa_di" bpmnElement="SequenceFlow_0sigvxa" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="1687" y="200" />
+        <di:waypoint x="1744" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0cwyrhs_di" bpmnElement="SequenceFlow_0cwyrhs" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="388" y="200" />
+        <di:waypoint x="440" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1qtws1k_di" bpmnElement="SequenceFlow_1qtws1k" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="1844" y="410" />
+        <di:waypoint x="1897" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0jja460_di" bpmnElement="SequenceFlow_0jja460" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="1844" y="200" />
+        <di:waypoint x="1897" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0yafy3c_di" bpmnElement="SequenceFlow_0yafy3c" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="1662" y="285" />
+        <di:waypoint x="1662" y="225" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1667" y="249" width="52" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_121gw32_di" bpmnElement="SequenceFlow_121gw32" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="1662" y="335" />
+        <di:waypoint x="1662" y="385" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1666" y="353" width="46" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0b9bkwr_di" bpmnElement="SequenceFlow_0b9bkwr" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="1586" y="310" />
+        <di:waypoint x="1637" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0yksehm_di" bpmnElement="SequenceFlow_0yksehm" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="1398" y="200" />
+        <di:waypoint x="1637" y="200" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1482" y="166" width="56" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0c82ho8_di" bpmnElement="SequenceFlow_0c82ho8" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="1373" y="225" />
+        <di:waypoint x="1373" y="410" />
+        <di:waypoint x="1637" y="410" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1380" y="370" width="80" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_07gejqz_di" bpmnElement="SequenceFlow_07gejqz" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="1373" y="225" />
+        <di:waypoint x="1373" y="310" />
+        <di:waypoint x="1486" y="310" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1389" y="260" width="79" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1a2rqox_di" bpmnElement="SequenceFlow_1a2rqox" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="1228" y="200" />
+        <di:waypoint x="1348" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0anqmya_di" bpmnElement="SequenceFlow_0anqmya" bioc:stroke="black" bioc:fill="white">
+        <di:waypoint x="248" y="200" />
+        <di:waypoint x="288" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BusinessRuleTask_0inhby5_di" bpmnElement="serviceTaskTicketkaufDurchKIModellpruefen" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <dc:Bounds x="720" y="270" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
