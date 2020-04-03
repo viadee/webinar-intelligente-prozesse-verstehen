@@ -1,7 +1,7 @@
 # Wie starten?
 
 - R und RStudio installieren: https://rstudio.com/products/rstudio/download/
-- Dieses verzeichnis in RStudio öffnen
+- Dieses Verzeichnis in RStudio öffnen
 - install_everything.r --> Datei öffnen und schrittweise alle Befehle ausführen
 - titanic.r --> Schrittweise die Modelle lernen
 
