@@ -37,3 +37,10 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# maven builds
+ipv-app/target/
+.Rproj.user
+.DS_Store
+ipv-app/.project
+ipv-app/.classpath

@@ -26,13 +26,12 @@ public class H2OModelWrapper {
     public int predict(TabularInstance instance) {
         final RowData row = new RowData();
 
-        row.put("Age", instance.getTransformedValue("Age"));
-        row.put("Sex", instance.getTransformedValue("Sex"));
-        row.put("Fare", instance.getTransformedValue("Fare"));
-        row.put("Pclass", instance.getTransformedValue("Pclass"));
-        row.put("SibSp", ((Integer) instance.getTransformedValue("SibSp")).doubleValue());
-        row.put("Parch", ((Integer) instance.getTransformedValue("Parch")).doubleValue());
-        row.put("Embarked", instance.getTransformedValue("Embarked"));
+        row.put("TypeClass", instance.getTransformedValue("TypeClass"));
+        row.put("Year", instance.getTransformedValue("TypeClass"));
+        row.put("Doors", ((Integer) instance.getTransformedValue("Doors")).doubleValue());
+        row.put("Passengers", ((Integer) instance.getTransformedValue("Passengers")).doubleValue());
+        row.put("Costs", instance.getTransformedValue("Costs"));
+        row.put("RepairType", instance.getTransformedValue("RepairType"));
 
         try {
             return ((BinomialModelPrediction) model.predict(row)).labelIndex;

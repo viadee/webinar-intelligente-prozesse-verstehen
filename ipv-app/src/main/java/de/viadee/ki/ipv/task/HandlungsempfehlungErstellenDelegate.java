@@ -12,11 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
+import de.viadee.ki.ipv.model.Claim;
+import de.viadee.ki.ipv.model.ClaimDataset;
 import de.viadee.ki.ipv.model.H2OModelWrapper;
 import de.viadee.ki.ipv.model.MojoModelWrapper;
-import de.viadee.ki.ipv.model.Person;
 import de.viadee.ki.ipv.model.ProcessConstants;
-import de.viadee.ki.ipv.model.TitanicDataset;
 import de.viadee.xai.anchor.adapter.tabular.AnchorTabular;
 import de.viadee.xai.anchor.adapter.tabular.TabularInstance;
 import de.viadee.xai.anchor.algorithm.AnchorConstructionBuilder;
@@ -30,22 +30,25 @@ public class HandlungsempfehlungErstellenDelegate implements JavaDelegate {
     @Autowired
     private MojoModelWrapper mojoModelWrapper;
 
-    @Value("classpath:model/data.csv")
+    @Value("classpath:model/claimdata.csv")
     private Resource dataResource;
 
-    @Value("classpath:model/aie_titanic_rf.zip")
+    @Value("classpath:model/DRF_1_AutoML_20201210_010425.zip")
     private Resource kiModell;
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        Person person = (Person) execution.getVariable(ProcessConstants.INT_PERSON);
-        logger.info("Externe Prüfung für Person {}", person);
+        Claim claim = (Claim) execution.getVariable(ProcessConstants.INT_CLAIM);
+        logger.info("Externe Prüfung für Person {}", claim);
 
-        String handlungsempfehlung = "Anomalie erkannt, Bitte prüfen Sie die Person.";
-        if (execution.hasVariable(ProcessConstants.PV_KI_ENTSCHEIDUNG_VERKAUF_OK)) {
+        String handlungsempfehlung = "Anomalie erkannt, Bitte prüfen Sie den Schaden.";
+        if (execution.hasVariable(ProcessConstants.PV_KI_ENTSCHEIDUNG_FREIGABE)) {
             logger.info("Handlungsempfehlung erzeugen");
-            personZuDatenHinzufuegen(person);
+            personZuDatenHinzufuegen(claim);
             handlungsempfehlung = generateHandlungsempfehlung(execution);
+            handlungsempfehlung = handlungsempfehlung.replaceAll("PREDICT \\[1\\]", "CHOOSE [ablehnen]");
+            handlungsempfehlung = handlungsempfehlung.replaceAll("PREDICT \\[0\\]", "CHOOSE [freigeben]");
+            handlungsempfehlung = handlungsempfehlung.replaceAll("CAUTION", "                                                                                                                                                                                      ");
         }
 
         execution.setVariable(ProcessConstants.PV_HANDLUNGSEMPFEHLUNG, handlungsempfehlung);
@@ -53,7 +56,7 @@ public class HandlungsempfehlungErstellenDelegate implements JavaDelegate {
 
     private String generateHandlungsempfehlung(DelegateExecution execution) throws Exception {
 
-        final AnchorTabular anchorTabular = TitanicDataset.createTabularTrainingDefinition(dataResource.getInputStream());
+        final AnchorTabular anchorTabular = ClaimDataset.createTabularTrainingDefinition(dataResource.getInputStream());
         final H2OModelWrapper h2oModel = new H2OModelWrapper(kiModell.getURL());
 
         final int i = anchorTabular.getTabularInstances().length;
@@ -65,19 +68,22 @@ public class HandlungsempfehlungErstellenDelegate implements JavaDelegate {
         return printLocalExplanationResult(explainedInstance, anchorTabular, h2oBuilder);
     }
 
-    private void personZuDatenHinzufuegen(Person person) throws IOException {
-        String age = mojoModelWrapper.wrapIntToString(person.getAge()) + ".0";
-        String sex = mojoModelWrapper.getSex(person);
-        String fare = mojoModelWrapper.wrapFare(person.getFare());
-        String pclass = mojoModelWrapper.wrapPclass(person.getPclass());
-        String sibSp = mojoModelWrapper.wrapSibSp(person.getSiblings());
-        String parch = mojoModelWrapper.wrapParch(person.getParch());
-        String embarked = mojoModelWrapper.wrapEmbarked(person.getEmabrked());
-        String survided = mojoModelWrapper.wrapIntToString(person.getSurvived());
-        String csvPersonLine = age + ",\"" + sex + "\"," + fare + ",\"" + pclass + "\"," + sibSp + "," + parch + ",\""
-                + embarked + "\",\"" + survided + "\"" + System.lineSeparator();
+    private void personZuDatenHinzufuegen(Claim claim) throws IOException {
 
-        new FileWriter(dataResource.getFile(), true).append(csvPersonLine).close();
+        String id = mojoModelWrapper.wrapIntToString(claim.getId()) ;
+        String typeclass = mojoModelWrapper.wrapTypeClass(claim.getTypeclass()) ;
+        String year = mojoModelWrapper.wrapYear(claim.getYear());
+        String doors = mojoModelWrapper.wrapDoors(claim.getDoors());
+        String passengers = mojoModelWrapper.wrapPassengers(claim.getPassengers());
+        String costs = mojoModelWrapper.wrapCosts(claim.getCosts());
+        String repairtype = mojoModelWrapper.wrapRepairType(claim.getRepairtype());
+        String rejected = mojoModelWrapper.wrapIntToString(claim.getRejected());
+
+        //"ClaimId","Rejected","TypeClass","Year","Doors","Passangers","Costs","RepairType"
+
+        String csvClaimLine = id+","+rejected+",\""+typeclass + "\"," + year + "," + doors + "," + passengers + "," + costs + ",\"" + repairtype+ "\"" + System.lineSeparator();
+    
+        new FileWriter(dataResource.getFile(), true).append(csvClaimLine).close();
     }
 
     private String printLocalExplanationResult(TabularInstance instance, AnchorTabular tabular,

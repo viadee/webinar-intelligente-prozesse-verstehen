@@ -40,3 +40,29 @@ titanicCsvImport <- function(filename) {
   
   return(data)
 }
+
+
+claimCsvImport <- function(filename) {
+  data <- read_csv2(filename, col_names = T, skip_empty_rows = T)
+  if('Rejected' %in% colnames(data)) {
+    data <- data %>%
+      mutate( Rejected = as.factor(Rejected) )
+  } else {
+    #data <- data %>% 
+    #  select(Age, Sex, Fare, Pclass, SibSp, Ticket, Parch, Cabin)
+  }
+  
+  data <- data %>%
+    replace(., is.na(.), "" ) %>% 
+    #drop_na() %>%
+    mutate( Year = as.numeric(Year) ) %>%
+    mutate( TypeClass = as.factor(TypeClass) ) %>%
+    mutate( Costs = as.numeric(Costs) ) %>%
+    mutate( Passengers = as.numeric(Passengers) ) %>%
+    mutate( Doors = as.numeric(Doors) ) %>%
+    mutate( RepairType = as.factor(RepairType) )
+
+  return(data)
+}
+
+

@@ -73,8 +73,8 @@
     <bpmn:userTask id="userTaskTicketPruefen" name="Schaden prüfen" camunda:asyncAfter="true">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="form_int_person_name" label="Name" type="string" defaultValue="${int_person_name}" />
-          <camunda:formField id="form_int_person_id" label="ID" type="long" defaultValue="${int_person_id}" />
+          <camunda:formField id="form_int_claim_id" label="ID" type="string" defaultValue="${int_claim_id}" />
+          <camunda:formField id="form_int_claim_year" label="Year" type="long" defaultValue="${int_claim_year}" />
           <camunda:formField id="form_pv_ki_konfidenz" label="Konfidenzwert" type="string" defaultValue="${pv_ki_konfidenz}" />
           <camunda:formField id="form_pv_anomalie_wert" label="Anomaliewert" type="string" defaultValue="${pv_anomalie_wert}" />
           <camunda:formField id="pv_interne_entscheidung" label="Ihre Entscheidung?" type="string" defaultValue="${pv_interne_entscheidung}" />
@@ -125,10 +125,10 @@
       <bpmn:outgoing>SequenceFlow_0anqmya</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0wr7o4e" sourceRef="serviceTaskHandlungsempfehlungErstellen" targetRef="userTaskTicketPruefen" />
-    <bpmn:sequenceFlow id="SequenceFlow_1slas9p" name="Nein, Ticketbestellung ablehnen" sourceRef="ExclusiveGateway_0h2pvvu" targetRef="ExclusiveGateway_0ie0zak">
+    <bpmn:sequenceFlow id="SequenceFlow_1slas9p" name="Nein, Schaden ablehnen" sourceRef="ExclusiveGateway_0h2pvvu" targetRef="ExclusiveGateway_0ie0zak">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!pv_ki_entscheidung_verkauf_ok}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_051hqym" name="Ja, Ticket ausstellen" sourceRef="ExclusiveGateway_0h2pvvu" targetRef="ExclusiveGateway_1rgoglh">
+    <bpmn:sequenceFlow id="SequenceFlow_051hqym" name="Ja, Schaden freigeben" sourceRef="ExclusiveGateway_0h2pvvu" targetRef="ExclusiveGateway_1rgoglh">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pv_ki_entscheidung_verkauf_ok}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_0cti5iv" name="Ja, KI ist ausreichend sicher" sourceRef="ExclusiveGateway_0eot1tp" targetRef="ExclusiveGateway_0h2pvvu">
@@ -272,7 +272,7 @@ etc.</bpmn:text>
         <di:waypoint x="1662" y="510" />
         <di:waypoint x="1662" y="435" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1300" y="460" width="80" height="40" />
+          <dc:Bounds x="1304" y="460" width="73" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_051hqym_di" bpmnElement="SequenceFlow_051hqym" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
@@ -281,7 +281,7 @@ etc.</bpmn:text>
         <di:waypoint x="1662" y="100" />
         <di:waypoint x="1662" y="175" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1295" y="66" width="50" height="27" />
+          <dc:Bounds x="1290" y="66" width="62" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0cti5iv_di" bpmnElement="SequenceFlow_0cti5iv" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">

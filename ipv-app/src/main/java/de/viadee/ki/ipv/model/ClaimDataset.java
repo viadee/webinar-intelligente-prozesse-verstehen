@@ -9,7 +9,7 @@ import de.viadee.xai.anchor.adapter.tabular.column.DoubleColumn;
 import de.viadee.xai.anchor.adapter.tabular.column.IntegerColumn;
 import de.viadee.xai.anchor.adapter.tabular.column.StringColumn;
 
-public class TitanicDataset {
+public class ClaimDataset {
 
     public static AnchorTabular createTabularTrainingDefinition(String pathTrainingdata) {
         InputStream trainingDataStream = ClassLoader.getSystemResourceAsStream(pathTrainingdata);
@@ -21,15 +21,17 @@ public class TitanicDataset {
         if (trainingDataStream == null)
             throw new RuntimeException("Could not load data");
         try {
+            //"ClaimId","Rejected","TypeClass","Year","Doors","Passangers","Costs","RepairType"
+
             return new AnchorTabularBuilderSequential().setDoBalance(false)
-                    .addColumn(DoubleColumn.fromStringInput("Age", -1, 5))
-                    .addColumn(new StringColumn("Sex"))
-                    .addColumn(DoubleColumn.fromStringInput("Fare", -1, 6))
-                    .addColumn(new StringColumn("Pclass"))
-                    .addColumn(IntegerColumn.fromStringInput("SibSp"))
-                    .addColumn(IntegerColumn.fromStringInput("Parch"))
-                    .addColumn(new StringColumn("Embarked"))
-                    .addTargetColumn(IntegerColumn.fromStringInput("Survived"))
+                    .addColumn(IntegerColumn.fromStringInput("ClaimId"))
+                    .addTargetColumn(IntegerColumn.fromStringInput("Rejected"))
+                    .addColumn(new StringColumn("TypeClass"))
+                    .addColumn(IntegerColumn.fromStringInput("Year"))
+                    .addColumn(IntegerColumn.fromStringInput("Doors"))
+                    .addColumn(IntegerColumn.fromStringInput("Passengers"))
+                    .addColumn(DoubleColumn.fromStringInput("Costs",-1,5))
+                    .addColumn(new StringColumn("RepairType"))
                     .build(trainingDataStream, true, false);
         } catch (IOException e) {
             throw new RuntimeException("Could not read data");

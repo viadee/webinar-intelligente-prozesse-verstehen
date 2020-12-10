@@ -9,36 +9,40 @@ import hex.genmodel.easy.prediction.BinomialModelPrediction;
 @Component
 public class MojoModelWrapper {
 
-    public String getSex(Person person) {
-        return person.getSex();
+    public String getTypeClass(Claim claim) {
+        return claim.getTypeclass();
     }
 
-    public String wrapSurvivedLabel(BinomialModelPrediction p) {
+    public String wrapRejectedLabel(BinomialModelPrediction p) {
         return p.label;
     }
 
-    public String wrapEmbarked(String embarked) {
-        return Objects.isNull(embarked) ? "" : embarked;
+    public String wrapTypeClass(String typeclass) {
+        return Objects.isNull(typeclass) ? "" : typeclass;
     }
 
-    public String wrapPclass(int pclass) {
-        return String.valueOf(pclass);
+    public String wrapDoors(int doors) {
+        return String.valueOf(doors);
+    }
+    
+    public String wrapYear(int year) {
+        return String.valueOf(year);
     }
 
-    public String wrapParch(int parch) {
-        return String.valueOf(parch);
+    public String wrapPassengers(int passengers) {
+        return String.valueOf(passengers);
     }
 
-    public String wrapSibSp(int siblings) {
-        return String.valueOf(siblings);
+    public String wrapCosts(double costs) {
+        return String.valueOf(costs);
     }
 
     public String wrapIntToString(int value) {
         return String.valueOf(value);
     }
 
-	public String wrapFare(double fare) {
-		return String.valueOf(fare);
+	public String wrapRepairType(String string) {
+		return String.valueOf(string);
 	}
 
 }
