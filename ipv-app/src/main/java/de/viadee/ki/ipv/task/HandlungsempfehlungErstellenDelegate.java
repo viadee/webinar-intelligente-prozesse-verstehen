@@ -49,9 +49,9 @@ public class HandlungsempfehlungErstellenDelegate implements JavaDelegate {
             handlungsempfehlung = handlungsempfehlung.replaceAll("PREDICT \\[1\\]", "CHOOSE [ablehnen]");
             handlungsempfehlung = handlungsempfehlung.replaceAll("PREDICT \\[0\\]", "CHOOSE [freigeben]");
             handlungsempfehlung = handlungsempfehlung.replaceAll("CAUTION", "                                                                                                                                                                                      ");
+            execution.setVariable(ProcessConstants.PV_HANDLUNGSEMPFEHLUNG, handlungsempfehlung);
         }
 
-        execution.setVariable(ProcessConstants.PV_HANDLUNGSEMPFEHLUNG, handlungsempfehlung);
     }
 
     private String generateHandlungsempfehlung(DelegateExecution execution) throws Exception {

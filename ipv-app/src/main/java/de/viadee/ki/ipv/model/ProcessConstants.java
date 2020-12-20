@@ -19,7 +19,7 @@ public class ProcessConstants {
     public static final String PV_ANOMALIE_SCHWELLWERT = "pv_anomalie_schwellwert";
     public static final String PV_KI_KONFIDENZ = "pv_ki_konfidenz";
     public static final String PV_KI_KONFIDENZSCHWELLWERT = "pv_ki_konfidenzschwellwert";
-    public static final String PV_KI_ENTSCHEIDUNG_FREIGABE = "pv_ki_entscheidung_freigabe";
+    public static final String PV_KI_ENTSCHEIDUNG_FREIGABE = "pv_ki_entscheidung_verkauf_ok";
     public static final String PV_INTERNE_ENTSCHEIDUNG = "pv_interne_entscheidung"; 
     public static final String PV_EXTERNE_ENTSCHEIDUNG = "pv_externe_entscheidung"; 
     public static final String PV_HANDLUNGSEMPFEHLUNG = "pv_handlungsempfehlung";

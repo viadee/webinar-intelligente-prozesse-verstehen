@@ -29,17 +29,18 @@ public class KFZSchadenApplicationStartProcessIT {
    
     @Test
     public void kfzSchadenMelden_Anomalie_IT() throws Exception {
-        JSONObject claim1 = createClaimdataAsJSON(5, 1000, 5515689f, "1", 8, 8, "Reperatur", 0);
-        sendClaim2Process(claim1);
-    }
-    @Test
-    public void kfzSchadenMelden_KlassifikationHandlung_IT() throws Exception {
-        JSONObject claim1 = createClaimdataAsJSON(5, 2010, 15689f, "1", 1, 5, "Reperatur", 0);
+        JSONObject claim1 = createClaimdataAsJSON(5, 1000, 5515689f, "1", 8, 5, "Reperatur", 0);
         sendClaim2Process(claim1);
     }
 
     @Test
     public void kfzSchadenMelden_Klassifikation_IT() throws Exception {
+        JSONObject claim1 = createClaimdataAsJSON(5, 2010, 15689f, "1", 1, 5, "Reperatur", 0);
+        sendClaim2Process(claim1);
+    }
+
+    @Test
+    public void kfzSchadenMelden_KlassifikationHandlung_IT() throws Exception {
         JSONObject claim1 = createClaimdataAsJSON(3, 2015, 2587f, "2", 1, 5, "Reperatur", 0);
         sendClaim2Process(claim1);
     }

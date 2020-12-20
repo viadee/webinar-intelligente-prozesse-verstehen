@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import de.viadee.ki.ipv.config.Config;
 import de.viadee.ki.ipv.model.Claim;
 import de.viadee.ki.ipv.model.MojoModelWrapper;
 import de.viadee.ki.ipv.model.ProcessConstants;
@@ -65,6 +66,12 @@ public class AnomalieerkennungDelegate implements JavaDelegate {
             logger.info(infoOut.toString());
 
             execution.setVariable(ProcessConstants.PV_ANOMALIE_WERT, anomaliewert);
+
+            if(anomaliewert>Config.SCHWELLWERT_ANOMALIE) {
+                execution.setVariable(ProcessConstants.PV_HANDLUNGSEMPFEHLUNG, "Claim feature is extremly out of range: [costs="+claim.getCosts()+",year="+claim.getYear()+",passengers="+claim.getPassengers()+"]");
+                logger.info("Claim feature is extremly out of range: [costs="+claim.getCosts()+",year="+claim.getYear()+",passengers="+claim.getPassengers()+"]");
+            }
+
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage());
         }

@@ -1,5 +1,6 @@
 camunda.bpm:
-  #process-engine-name: ticketbestellung
+  #process-engine-name: KFZ Schadensmanagement
+  license-file: file:${user.home}/.camunda/license.txt
   rest:
     enabled: true
   admin-user:

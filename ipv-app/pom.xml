@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
@@ -18,15 +18,54 @@
     </developer>
   </developers>
 
+  <repositories>
+    <repository>
+      <id>camunda-bpm-nexus-ee</id>
+      <name>camunda-bpm-nexus</name>
+      <url>
+        https://app.camunda.com/nexus/content/repositories/camunda-bpm-ee
+      </url>
+    </repository>
+  </repositories>
+
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <camunda.version>7.12.0</camunda.version>
+    <!--camunda.version>7.12.0</camunda.version-->
     <!-- add "-ee" for Enterprise Edition -->
-    <!--<camunda.version>7.12.0-ee</camunda.version>-->
+    <!--camunda.version>7.12.0-ee</camunda.version-->
     <camunda.spring.boot.version>3.4.0</camunda.spring.boot.version>
     <spring.boot.version>2.2.1.RELEASE</spring.boot.version>
   </properties>
+
+  <profiles>
+    <profile>
+      <id>enterprise</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.camunda.bpm.springboot</groupId>
+          <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
+          <version>${camunda.spring.boot.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>common</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.camunda.bpm.springboot</groupId>
+          <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+          <version>${camunda.spring.boot.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 
   <dependencyManagement>
     <dependencies>
@@ -38,6 +77,13 @@
         <scope>import</scope>
       </dependency>
     </dependencies>
+    <!--dependency>
+        <groupId>org.camunda.bpm</groupId>
+        <artifactId>camunda-bom</artifactId>
+        <version>7.14.0-ee</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency-->
   </dependencyManagement>
 
   <dependencies>
@@ -64,11 +110,11 @@
       <artifactId>commons-csv</artifactId>
       <version>1.1</version>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>org.camunda.bpm.springboot</groupId>
-      <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+      <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
       <version>${camunda.spring.boot.version}</version>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>org.camunda.bpm.springboot</groupId>
       <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>

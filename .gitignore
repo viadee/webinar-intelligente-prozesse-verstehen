@@ -44,3 +44,4 @@ ipv-app/target/
 .DS_Store
 ipv-app/.project
 ipv-app/.classpath
+.vscode/
