@@ -37,3 +37,12 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+**/.DS_Store
+
+ipv-app/.settings/**
+ipv-app/target/**
+ipv-app/.project
+mlmodel/model_building/__pycache__/**.pyc
+model-service/.project
+ipv-app/.classpath
+.vscode/settings.json
